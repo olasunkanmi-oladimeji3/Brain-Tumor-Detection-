@@ -6,14 +6,14 @@ import Link from "next/link"
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-white">
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+           <Link href="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
             <span className="text-xl font-bold text-gray-900">NeuroDetect AI</span>
-          </div>
+          </Link>
           <div className="flex items-center space-x-4">
             <Link href="/auth/login">
               <Button variant="ghost">Sign In</Button>
@@ -36,7 +36,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/signup">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                 <Upload className="mr-2 h-5 w-5" />
                 Upload MRI Scan
               </Button>
@@ -50,7 +50,7 @@ export default function LandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section className="py-16 px-4 bg-gray-100">
         <div className="container mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">How Our System Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -92,24 +92,24 @@ export default function LandingPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 px-4">
+      <section className="py-16 px-4 bg-blue-600 text-white">
         <div className="container mx-auto">
           <div className="grid md:grid-cols-4 gap-8 text-center">
             <div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">94.5%</div>
-              <div className="text-gray-600">Accuracy Rate</div>
+              <div className="text-4xl font-bold text-white mb-2">94.5%</div>
+              <div className="text-white-200">Accuracy Rate</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">{"<"}30s</div>
-              <div className="text-gray-600">Analysis Time</div>
+              <div className="text-4xl font-bold text-white mb-2">{"<"}30s</div>
+              <div className="text-white-200">Analysis Time</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">10K+</div>
-              <div className="text-gray-600">Scans Analyzed</div>
+              <div className="text-4xl font-bold text-white mb-2">10K+</div>
+              <div className="text-white-200">Scans Analyzed</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-blue-600 mb-2">500+</div>
-              <div className="text-gray-600">Medical Professionals</div>
+              <div className="text-4xl font-bold text-white mb-2">500+</div>
+              <div className="text-white-200">Medical Professionals</div>
             </div>
           </div>
         </div>
@@ -159,7 +159,7 @@ export default function LandingPage() {
             Join hundreds of medical professionals using AI to improve brain tumor diagnosis accuracy and speed.
           </p>
           <Link href="/auth/signup">
-            <Button size="lg" variant="secondary">
+            <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
               Start Free Trial
             </Button>
           </Link>
@@ -221,7 +221,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 NeuroDetect AI. All rights reserved.</p>
+            <p>&copy; 2025 NeuroDetect AI. All rights reserved.</p>
           </div>
         </div>
       </footer>

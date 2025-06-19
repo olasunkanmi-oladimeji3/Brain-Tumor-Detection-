@@ -113,7 +113,9 @@ export default function HistoryPage() {
             </Link>
             <div className="flex items-center space-x-2">
               <Brain className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Scan History</span>
+              <span className="text-xl font-bold text-gray-900">
+                Scan History
+              </span>
             </div>
           </div>
         </div>
@@ -121,15 +123,21 @@ export default function HistoryPage() {
 
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Scan History</h1>
-          <p className="text-gray-600">View and manage all your previous MRI scan analyses.</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Scan History
+          </h1>
+          <p className="text-gray-600">
+            View and manage all your previous MRI scan analyses.
+          </p>
         </div>
 
         {/* Filters and Search */}
         <Card className="mb-6">
           <CardHeader>
             <CardTitle>Filter & Search</CardTitle>
-            <CardDescription>Find specific scans using filters and search</CardDescription>
+            <CardDescription>
+              Find specific scans using filters and search
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-4 gap-4">
@@ -147,7 +155,7 @@ export default function HistoryPage() {
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60 bg-neutral-100">
                   <SelectItem value="all">All Status</SelectItem>
                   <SelectItem value="completed">Completed</SelectItem>
                   <SelectItem value="processing">Processing</SelectItem>
@@ -159,7 +167,7 @@ export default function HistoryPage() {
                 <SelectTrigger>
                   <SelectValue placeholder="Filter by result" />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent className="max-h-60 bg-neutral-100">
                   <SelectItem value="all">All Results</SelectItem>
                   <SelectItem value="tumor">Tumor Detected</SelectItem>
                   <SelectItem value="no-tumor">No Tumor</SelectItem>
@@ -184,7 +192,9 @@ export default function HistoryPage() {
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold text-red-600">{scanHistory.filter((s) => s.tumorDetected).length}</div>
+              <div className="text-2xl font-bold text-red-600">
+                {scanHistory.filter((s) => s.tumorDetected).length}
+              </div>
               <p className="text-sm text-gray-600">Tumors Detected</p>
             </CardContent>
           </Card>
@@ -212,7 +222,9 @@ export default function HistoryPage() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Scan Results ({filteredScans.length})</CardTitle>
-                <CardDescription>Click on any scan to view detailed results</CardDescription>
+                <CardDescription>
+                  Click on any scan to view detailed results
+                </CardDescription>
               </div>
               <Button variant="outline">
                 <Download className="h-4 w-4 mr-2" />
@@ -223,7 +235,10 @@ export default function HistoryPage() {
           <CardContent>
             <div className="space-y-4">
               {filteredScans.map((scan) => (
-                <div key={scan.id} className="border rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div
+                  key={scan.id}
+                  className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-4">
                       <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -232,22 +247,28 @@ export default function HistoryPage() {
 
                       <div>
                         <div className="flex items-center space-x-2">
-                          <h3 className="font-semibold text-gray-900">{scan.patientId}</h3>
+                          <h3 className="font-semibold text-gray-900">
+                            {scan.patientId}
+                          </h3>
                           <Badge
-                            variant={scan.status === "completed" ? "default" : "secondary"}
+                            variant={
+                              scan.status === "completed"
+                                ? "default"
+                                : "secondary"
+                            }
                             className={
                               scan.status === "completed"
                                 ? "bg-green-100 text-green-800"
                                 : scan.status === "processing"
-                                  ? "bg-yellow-100 text-yellow-800"
-                                  : "bg-gray-100 text-gray-800"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-gray-100 text-gray-800"
                             }
                           >
                             {scan.status === "completed"
                               ? "Completed"
                               : scan.status === "processing"
-                                ? "Processing"
-                                : "Failed"}
+                              ? "Processing"
+                              : "Failed"}
                           </Badge>
                         </div>
                         <div className="flex items-center space-x-4 text-sm text-gray-600 mt-1">
@@ -267,16 +288,22 @@ export default function HistoryPage() {
                             {scan.tumorDetected ? (
                               <>
                                 <AlertTriangle className="h-4 w-4 text-red-600" />
-                                <span className="font-medium text-red-700">{scan.tumorType}</span>
+                                <span className="font-medium text-red-700">
+                                  {scan.tumorType}
+                                </span>
                               </>
                             ) : (
                               <>
                                 <CheckCircle className="h-4 w-4 text-green-600" />
-                                <span className="font-medium text-green-700">No tumor detected</span>
+                                <span className="font-medium text-green-700">
+                                  No tumor detected
+                                </span>
                               </>
                             )}
                           </div>
-                          <div className="text-sm text-gray-500 mt-1">Confidence: {scan.confidence}%</div>
+                          <div className="text-sm text-gray-500 mt-1">
+                            Confidence: {scan.confidence}%
+                          </div>
                         </div>
                       )}
 
@@ -296,7 +323,10 @@ export default function HistoryPage() {
                           </>
                         )}
                         {scan.status === "processing" && (
-                          <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                          <Badge
+                            variant="secondary"
+                            className="bg-yellow-100 text-yellow-800"
+                          >
                             Processing...
                           </Badge>
                         )}
@@ -309,9 +339,13 @@ export default function HistoryPage() {
               {filteredScans.length === 0 && (
                 <div className="text-center py-12">
                   <Brain className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No scans found</h3>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No scans found
+                  </h3>
                   <p className="text-gray-600 mb-4">
-                    {searchTerm || filterStatus !== "all" || filterResult !== "all"
+                    {searchTerm ||
+                    filterStatus !== "all" ||
+                    filterResult !== "all"
                       ? "Try adjusting your search or filters"
                       : "Upload your first MRI scan to get started"}
                   </p>
@@ -328,5 +362,5 @@ export default function HistoryPage() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

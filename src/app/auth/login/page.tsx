@@ -29,7 +29,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-blue-300 to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
@@ -40,7 +40,7 @@ export default function LoginPage() {
           <p className="text-gray-600">Sign in to your medical account</p>
         </div>
 
-        <Card>
+        <Card className="bg-white shadow-lg rounded-lg">
           <CardHeader>
             <CardTitle>Sign In</CardTitle>
             <CardDescription>Enter your credentials to access the diagnosis system</CardDescription>
@@ -75,11 +75,11 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="role">Role</Label>
-                <Select defaultValue="doctor">
+                <Select defaultValue="doctor" >
                   <SelectTrigger>
                     <SelectValue placeholder="Select your role" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 bg-neutral-100">
                     <SelectItem value="doctor">Doctor</SelectItem>
                     <SelectItem value="researcher">Researcher</SelectItem>
                     <SelectItem value="admin">Administrator</SelectItem>
@@ -93,7 +93,7 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-black text-white" disabled={isLoading}>
                 {isLoading ? "Signing in..." : "Sign In"}
               </Button>
             </form>

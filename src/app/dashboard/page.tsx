@@ -35,14 +35,14 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-100">
       {/* Header */}
       <header className="bg-white border-b">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
             <span className="text-xl font-bold text-gray-900">NeuroDetect AI</span>
-          </div>
+          </Link>
           <div className="flex items-center space-x-4">
             <span className="text-sm text-gray-600">Dr. Sarah Johnson</span>
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-medium">
@@ -61,7 +61,7 @@ export default function DashboardPage() {
 
         {/* Quick Actions */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Link href="/upload">
+          <Link href="/upload" className="hover:shadow-lg transition-shadow bg-white">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader className="pb-3">
                 <div className="flex items-center space-x-2">
@@ -75,7 +75,7 @@ export default function DashboardPage() {
             </Card>
           </Link>
 
-          <Link href="/history">
+          <Link href="/history" className="hover:shadow-lg transition-shadow bg-white">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader className="pb-3">
                 <div className="flex items-center space-x-2">
@@ -89,7 +89,7 @@ export default function DashboardPage() {
             </Card>
           </Link>
 
-          <Card>
+          <Card className="hover:shadow-lg transition-shadow bg-white">
             <CardHeader className="pb-3">
               <div className="flex items-center space-x-2">
                 <TrendingUp className="h-5 w-5 text-purple-600" />
@@ -101,7 +101,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Link href="/help">
+          <Link href="/help" className="hover:shadow-lg transition-shadow bg-white">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader className="pb-3">
                 <div className="flex items-center space-x-2">
@@ -118,7 +118,7 @@ export default function DashboardPage() {
 
         {/* Stats Overview */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
+          <Card className="hover:shadow-lg transition-shadow bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Scans</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
@@ -129,7 +129,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-lg transition-shadow bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Tumors Detected</CardTitle>
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
@@ -140,7 +140,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-lg transition-shadow bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Avg. Confidence</CardTitle>
               <CheckCircle className="h-4 w-4 text-muted-foreground" />
@@ -151,7 +151,7 @@ export default function DashboardPage() {
             </CardContent>
           </Card>
 
-          <Card>
+          <Card className="hover:shadow-lg transition-shadow bg-white">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Avg. Analysis Time</CardTitle>
               <Clock className="h-4 w-4 text-muted-foreground" />
@@ -164,7 +164,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Recent Scans */}
-        <Card>
+        <Card className="hover:shadow-lg transition-shadow bg-neutral-100">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
@@ -179,7 +179,7 @@ export default function DashboardPage() {
           <CardContent>
             <div className="space-y-4">
               {recentScans.map((scan) => (
-                <div key={scan.id} className="flex items-center justify-between p-4 border rounded-lg">
+                <div key={scan.id} className="flex items-center justify-between p-4 border rounded-lg bg-amber-100">
                   <div className="flex items-center space-x-4">
                     <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
                       <Brain className="h-5 w-5 text-blue-600" />

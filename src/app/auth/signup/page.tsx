@@ -31,21 +31,25 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b from-blue-200 to-white flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">NeuroDetect AI</span>
+            <span className="text-2xl font-bold text-gray-900">
+              NeuroDetect AI
+            </span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
           <p className="text-gray-600">Join the future of medical diagnosis</p>
         </div>
 
-        <Card>
+        <Card className="bg-white shadow-lg rounded-lg">
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
-            <CardDescription>Create your medical professional account</CardDescription>
+            <CardDescription>
+              Create your medical professional account
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSignUp} className="space-y-4">
@@ -62,7 +66,12 @@ export default function SignUpPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="email">Email Address</Label>
-                <Input id="email" type="email" placeholder="doctor@hospital.com" required />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="doctor@hospital.com"
+                  required
+                />
               </div>
 
               <div className="space-y-2">
@@ -76,7 +85,7 @@ export default function SignUpPage() {
                   <SelectTrigger>
                     <SelectValue placeholder="Select your role" />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="max-h-60 bg-neutral-100">
                     <SelectItem value="radiologist">Radiologist</SelectItem>
                     <SelectItem value="neurologist">Neurologist</SelectItem>
                     <SelectItem value="neurosurgeon">Neurosurgeon</SelectItem>
@@ -107,7 +116,11 @@ export default function SignUpPage() {
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -128,7 +141,11 @@ export default function SignUpPage() {
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
-                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -141,7 +158,10 @@ export default function SignUpPage() {
                     Terms of Service
                   </Link>{" "}
                   and{" "}
-                  <Link href="/privacy" className="text-blue-600 hover:underline">
+                  <Link
+                    href="/privacy"
+                    className="text-blue-600 hover:underline"
+                  >
                     Privacy Policy
                   </Link>
                 </Label>
@@ -154,7 +174,7 @@ export default function SignUpPage() {
                 </Label>
               </div>
 
-              <Button type="submit" className="w-full" disabled={isLoading}>
+              <Button type="submit" className="w-full bg-blue-900 text-white" disabled={isLoading}>
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
@@ -162,7 +182,10 @@ export default function SignUpPage() {
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{" "}
-                <Link href="/auth/login" className="text-blue-600 hover:underline">
+                <Link
+                  href="/auth/login"
+                  className="text-blue-600 hover:underline"
+                >
                   Sign in
                 </Link>
               </p>
@@ -176,5 +199,5 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
