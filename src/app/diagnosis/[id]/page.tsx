@@ -11,23 +11,22 @@ import Link from "next/link"
 import { useState } from "react"
 
 
-type Props = {
-  params: {
-    id: string
-  }
-}
+// type Props = {
+//   params: {
+//     id: string
+//   }
+// }
 
 // ✅ This works for Next.js App Router dynamic routes
-export default function DiagnosisPage({ params }: Props) {
-  const { id } = params;
-  console.log(id);
+export default function DiagnosisPage() {
+  // const { id } = params;
+  // console.log(id);
   
-
   const [notes, setNotes] = useState("")
 
   // Mock diagnosis data
   const diagnosis = {
-    id: params.id,
+    id: 1,
     patientId: "P-2024-004",
     scanDate: "2024-01-15",
     analysisDate: "2024-01-15 14:30:22",
