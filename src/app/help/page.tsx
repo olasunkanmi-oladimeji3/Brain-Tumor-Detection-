@@ -230,7 +230,7 @@ export default function HelpPage() {
             <Card>
               <CardHeader>
                 <CardTitle>Submit Support Ticket</CardTitle>
-                <CardDescription>Describe your issue and we'll help you</CardDescription>
+                <CardDescription>Describe your issue and we&apos;ll help you</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">

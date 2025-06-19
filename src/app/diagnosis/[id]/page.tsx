@@ -10,7 +10,19 @@ import { Brain, Download, Share2, ArrowLeft, AlertTriangle, CheckCircle, Clock, 
 import Link from "next/link"
 import { useState } from "react"
 
-export default function DiagnosisPage({ params }: { params: { id: string } }) {
+
+type Props = {
+  params: {
+    id: string
+  }
+}
+
+// ✅ This works for Next.js App Router dynamic routes
+export default function DiagnosisPage({ params }: Props) {
+  const { id } = params;
+  console.log(id);
+  
+
   const [notes, setNotes] = useState("")
 
   // Mock diagnosis data
