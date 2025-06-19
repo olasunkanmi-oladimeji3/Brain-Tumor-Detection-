@@ -51,7 +51,7 @@ export default function LandingPage() {
             Improved Medical Diagnosis system <br />
             by Emmanuel Oluwasegun Adeniran
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center py-2">
             <Link href="/auth/signup">
               <Button
                 size="lg"
