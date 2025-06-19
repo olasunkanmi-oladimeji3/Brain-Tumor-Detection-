@@ -1,8 +1,14 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Brain, Upload, FileSearch, Shield, Users, Award } from "lucide-react"
-import Link from "next/link"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Brain, Upload, FileSearch, Shield, Users, Award } from "lucide-react";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -10,9 +16,11 @@ export default function LandingPage() {
       {/* Header */}
       <header className="border-b bg-white/80 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-           <Link href="/" className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-2">
             <Brain className="h-8 w-8 text-blue-600" />
-            <span className="text-xl font-bold text-gray-900">NeuroDetect AI</span>
+            <span className="text-xl font-bold text-gray-900">
+              NeuroDetect AI
+            </span>
           </Link>
           <div className="flex items-center space-x-4">
             <Link href="/auth/login">
@@ -28,15 +36,27 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="py-20 px-4">
         <div className="container mx-auto text-center">
-          <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">AI-Powered Medical Diagnosis</Badge>
-          <h1 className="text-5xl font-bold text-gray-900 mb-6">AI-Powered Brain Tumor Detection</h1>
+          <Badge className="mb-4 bg-blue-100 text-blue-800 hover:bg-blue-100">
+            AI-Powered Medical Diagnosis
+          </Badge>
+          <h1 className="text-5xl font-bold text-gray-900 mb-6">
+            AI-Powered Brain Tumor Detection
+          </h1>
           <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Advanced machine learning technology to assist medical professionals in detecting and classifying brain
-            tumors from MRI scans with high accuracy and speed.
+            Advanced machine learning technology to assist medical professionals
+            in detecting and classifying brain tumors from MRI scans with high
+            accuracy and speed.
+          </p>
+          <p>
+            Improved Medical Diagnosis system <br />
+            by Emmanuel Oluwasegun Adeniran
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/auth/signup">
-              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 <Upload className="mr-2 h-5 w-5" />
                 Upload MRI Scan
               </Button>
@@ -52,7 +72,9 @@ export default function LandingPage() {
       {/* Features Section */}
       <section className="py-16 px-4 bg-gray-100">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">How Our System Works</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            How Our System Works
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <Card className="text-center">
               <CardHeader>
@@ -61,7 +83,8 @@ export default function LandingPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Securely upload DICOM, JPEG, or PNG MRI images through our encrypted platform
+                  Securely upload DICOM, JPEG, or PNG MRI images through our
+                  encrypted platform
                 </CardDescription>
               </CardContent>
             </Card>
@@ -72,7 +95,8 @@ export default function LandingPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Our advanced neural network analyzes the scan for tumor detection and classification
+                  Our advanced neural network analyzes the scan for tumor
+                  detection and classification
                 </CardDescription>
               </CardContent>
             </Card>
@@ -83,7 +107,8 @@ export default function LandingPage() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Receive comprehensive diagnosis reports with confidence scores and visualizations
+                  Receive comprehensive diagnosis reports with confidence scores
+                  and visualizations
                 </CardDescription>
               </CardContent>
             </Card>
@@ -118,7 +143,9 @@ export default function LandingPage() {
       {/* Trust Section */}
       <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">Trusted by Medical Professionals</h2>
+          <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+            Trusted by Medical Professionals
+          </h2>
           <div className="grid md:grid-cols-3 gap-8">
             <Card>
               <CardHeader>
@@ -126,7 +153,9 @@ export default function LandingPage() {
                 <CardTitle>HIPAA Compliant</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription>Full compliance with healthcare data protection regulations</CardDescription>
+                <CardDescription>
+                  Full compliance with healthcare data protection regulations
+                </CardDescription>
               </CardContent>
             </Card>
             <Card>
@@ -135,7 +164,9 @@ export default function LandingPage() {
                 <CardTitle>Clinical Validation</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription>Validated by leading radiologists and neurosurgeons worldwide</CardDescription>
+                <CardDescription>
+                  Validated by leading radiologists and neurosurgeons worldwide
+                </CardDescription>
               </CardContent>
             </Card>
             <Card>
@@ -144,7 +175,9 @@ export default function LandingPage() {
                 <CardTitle>FDA Approved</CardTitle>
               </CardHeader>
               <CardContent>
-                <CardDescription>Approved for clinical use as a diagnostic aid tool</CardDescription>
+                <CardDescription>
+                  Approved for clinical use as a diagnostic aid tool
+                </CardDescription>
               </CardContent>
             </Card>
           </div>
@@ -154,12 +187,19 @@ export default function LandingPage() {
       {/* CTA Section */}
       <section className="py-20 px-4 bg-blue-600">
         <div className="container mx-auto text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">Ready to Get Started?</h2>
+          <h2 className="text-3xl font-bold text-white mb-6">
+            Ready to Get Started?
+          </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join hundreds of medical professionals using AI to improve brain tumor diagnosis accuracy and speed.
+            Join hundreds of medical professionals using AI to improve brain
+            tumor diagnosis accuracy and speed.
           </p>
           <Link href="/auth/signup">
-            <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="bg-white text-blue-600 hover:bg-gray-100"
+            >
               Start Free Trial
             </Button>
           </Link>
@@ -175,7 +215,10 @@ export default function LandingPage() {
                 <Brain className="h-6 w-6" />
                 <span className="font-bold">NeuroDetect AI</span>
               </div>
-              <p className="text-gray-400">Advanced AI-powered brain tumor detection for medical professionals.</p>
+              <p className="text-gray-400">
+                Advanced AI-powered brain tumor detection for medical
+                professionals.
+              </p>
             </div>
             <div>
               <h3 className="font-semibold mb-4">Product</h3>
@@ -226,5 +269,5 @@ export default function LandingPage() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
