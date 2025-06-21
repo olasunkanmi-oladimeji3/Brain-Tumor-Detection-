@@ -1,96 +1,179 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useCallback } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Upload, Brain, FileImage, CheckCircle, X, ArrowLeft } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useState, useCallback, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import {
+  Upload,
+  Brain,
+  FileImage,
+  CheckCircle,
+  X,
+  ArrowLeft,
+} from "lucide-react";
+import Link from "next/link";
+
+import { createClient } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 
 export default function UploadPage() {
-  const [files, setFiles] = useState<File[]>([])
-  const [dragActive, setDragActive] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [uploadProgress, setUploadProgress] = useState(0)
-  const router = useRouter()
+  const router = useRouter();
+  const supabase = createClient();
+  useEffect(() => {
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.push("/auth/login");
+      }
+    };
+    checkUser();
+  }, [supabase.auth, router]);
+
+  const [files, setFiles] = useState<File[]>([]);
+  const [dragActive, setDragActive] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+
+  const [patientData, setpatientData] = useState({
+    patientId: "",
+    age: "",
+    gender: "",
+    medicalHistory: "",
+    scanDate: "",
+    scanType: "",
+    fieldStrength: "",
+    clinicalNotes: "",
+  });
 
   const handleDrag = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
     if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
+      setDragActive(true);
     } else if (e.type === "dragleave") {
-      setDragActive(false)
+      setDragActive(false);
     }
-  }, [])
+  }, []);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const newFiles = Array.from(e.dataTransfer.files)
-      setFiles((prev) => [...prev, ...newFiles])
+      const newFiles = Array.from(e.dataTransfer.files);
+      setFiles((prev) => [...prev, ...newFiles]);
     }
-  }, [])
+  }, []);
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files)
-      setFiles((prev) => [...prev, ...newFiles])
+      const newFiles = Array.from(e.target.files);
+      setFiles((prev) => [...prev, ...newFiles]);
     }
-  }
+  };
 
   const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index))
-  }
+    setFiles((prev) => prev.filter((_, i) => i !== index));
+  };
 
-  const handleUpload = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (files.length === 0) return;
+// make sure this is imported
 
-    setUploading(true);
-    setUploadProgress(0);
+const handleUpload = async (e: React.FormEvent) => {
+  e.preventDefault();
+  if (files.length === 0) return;
 
-    const formData = new FormData();
-    files.forEach((file) => {
-      formData.append("files", file);
-    });
+  setUploading(true);
+  setUploadProgress(0);
 
-    const res = await fetch("/api/upload", {
+  const formData = new FormData();
+  formData.append("file", files[0]);
+
+  try {
+    const analyzeRes = await fetch("https://ml-ai-for-detecting-brain-tumor.onrender.com", {
       method: "POST",
       body: formData,
     });
 
-    if (res.ok) {
-      const data = await res.json();
-      console.log("Upload success", data);
-      // Redirect to file preview (fake ID for now, replace later)
-      router.push(`/diagnosis/scan-004`);
-    } else {
-      alert("Upload failed");
-    }
+    if (!analyzeRes.ok) throw new Error("Failed to analyze");
 
-    setUploading(false);
+    const result = await analyzeRes.json();
+
+    // ✅ Create Supabase client
+    const supabase = createClient();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    // ✅ Save to Supabase and get the inserted ID
+    const saveRes = await fetch("/api/save-analysis", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_uid: user?.id,
+        patient_id: patientData.patientId,
+        tumor_type: result.tumor_type,
+        age: Number(patientData.age),
+        gender: patientData.gender,
+        scan_date: patientData.scanDate,
+        scan_type: patientData.scanType,
+        field_strength: patientData.fieldStrength,
+        clinical_notes: patientData.clinicalNotes,
+        confidence: result.confidence,
+        tumor_detected: result.tumor_detected,
+        image_url: "", // optional
+      }),
+    });
+
+    const saveData = await saveRes.json();
+
+    if (saveRes.ok && saveData.id) {
+      console.log("✅ Upload success:", saveData);
+      // ✅ Redirect to details page with inserted diagnosis ID
+      router.push(`/diagnosis/${saveData.id}`);
+    } else {
+      throw new Error(saveData?.error || "Saving to Supabase failed");
+    }
+  } catch (error) {
+    console.error("❌ Error during upload:", error);
+    alert("Upload or analysis failed.");
   }
+
+  setUploading(false);
+};
 
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
-  }
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return (
+      Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-200 to-white">
@@ -138,17 +221,39 @@ export default function UploadPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="patientId">Patient ID</Label>
-                  <Input id="patientId" placeholder="P-2024-004" required />
+                  <Input
+                    id="patientId"
+                    placeholder="P-2024-004"
+                    required
+                    onChange={(e) =>
+                      setpatientData({
+                        ...patientData,
+                        patientId: e.target.value,
+                      })
+                    }
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="age">Age</Label>
-                  <Input id="age" type="number" placeholder="45" required />
+                  <Input
+                    id="age"
+                    type="number"
+                    placeholder="45"
+                    required
+                    onChange={(e) =>
+                      setpatientData({ ...patientData, age: e.target.value })
+                    }
+                  />
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="gender">Gender</Label>
-                  <Select>
+                  <Select
+                    onValueChange={(value) =>
+                      setpatientData({ ...patientData, gender: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select gender" />
                     </SelectTrigger>
@@ -161,7 +266,17 @@ export default function UploadPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="scanDate">Scan Date</Label>
-                  <Input id="scanDate" type="date" required />
+                  <Input
+                    id="scanDate"
+                    type="date"
+                    required
+                    onChange={(e) =>
+                      setpatientData({
+                        ...patientData,
+                        scanDate: e.target.value,
+                      })
+                    }
+                  />
                 </div>
               </div>
               <div className="space-y-2">
@@ -170,6 +285,12 @@ export default function UploadPage() {
                   id="clinicalNotes"
                   placeholder="Any relevant clinical information or symptoms..."
                   rows={3}
+                  onChange={(e) =>
+                    setpatientData({
+                      ...patientData,
+                      clinicalNotes: e.target.value,
+                    })
+                  }
                 />
               </div>
             </CardContent>
@@ -187,7 +308,11 @@ export default function UploadPage() {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="scanType">Scan Type</Label>
-                  <Select>
+                  <Select
+                    onValueChange={(value) =>
+                      setpatientData({ ...patientData, scanType: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select scan type" />
                     </SelectTrigger>
@@ -202,7 +327,11 @@ export default function UploadPage() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="fieldStrength">Field Strength</Label>
-                  <Select>
+                  <Select
+                    onValueChange={(value) =>
+                      setpatientData({ ...patientData, fieldStrength: value })
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select field strength" />
                     </SelectTrigger>

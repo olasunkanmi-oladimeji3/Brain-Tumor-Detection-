@@ -1,53 +1,86 @@
-"use client"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
-import { Separator } from "@/components/ui/separator"
-import { Textarea } from "@/components/ui/textarea"
-import { Brain, Download, Share2, ArrowLeft, AlertTriangle, CheckCircle, Clock, FileText, Eye, Zap } from "lucide-react"
-import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react";
+import { createClient } from "@/utils/supabase/client";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import {
+  Brain,
+  Download,
+  Share2,
+  ArrowLeft,
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  FileText,
+  Eye,
+  Zap,
+} from "lucide-react";
+import Link from "next/link";
+import { DiagnosisClient } from "../diagnosis-client";
+import { useParams } from "next/navigation";
 
+type Diagnosis = {
+  id: string;
+  patient_id: string;
+  scan_date: string;
+  created_at: string;
+  tumor_type: string;
+  tumor_detected: boolean;
+  confidence: number;
+  scan_type: string;
+  field_strength: string;
+  clinical_notes: string;
+  location?: string;
+  size?: string;
+  volume?: string;
+  processing_time?: string;
+};
 
-// type Props = {
-//   params: {
-//     id: string
-//   }
-// }
-
-// ✅ This works for Next.js App Router dynamic routes
+// Server component that fetches data from Supabase
 export default function DiagnosisPage() {
-  // const { id } = params;
-  // console.log(id);
-  
-  const [notes, setNotes] = useState("")
+  const { id } = useParams();
+  const [diagnosisData, setdiagnosisData] = useState<Diagnosis | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock diagnosis data
-  const diagnosis = {
-    id: 1,
-    patientId: "P-2024-004",
-    scanDate: "2024-01-15",
-    analysisDate: "2024-01-15 14:30:22",
-    status: "completed",
-    tumorDetected: true,
-    tumorType: "Glioma",
-    confidence: 94.2,
-    location: "Left frontal lobe",
-    size: "2.3 x 1.8 x 1.5 cm",
-    volume: "6.21 cm³",
-    scanType: "T1-weighted with contrast",
-    fieldStrength: "3 Tesla",
-    processingTime: "24 seconds",
-    aiModel: "NeuroDetect v2.1",
-    metrics: {
-      sensitivity: 96.8,
-      specificity: 92.4,
-      precision: 89.7,
-      recall: 96.8,
-      f1Score: 93.1,
-    },
+  useEffect(() => {
+    const fetchDiagnosis = async () => {
+      const supabase = createClient();
+
+      const { data, error } = await supabase
+        .from("diagnoses")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error || !data) {
+        setError("Not found");
+        return;
+      }
+
+      setdiagnosisData(data);
+    };
+
+    if (id) fetchDiagnosis();
+  }, [id]);
+
+  // Transform Supabase data to match our existing interface
+
+  if (error || !diagnosisData) {
+    return (
+      <div className="p-6 text-red-600">
+        Error: {error || "Diagnosis not found."}
+      </div>
+    );
   }
 
   return (
@@ -64,7 +97,9 @@ export default function DiagnosisPage() {
             </Link>
             <div className="flex items-center space-x-2">
               <Brain className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">Diagnosis Report</span>
+              <span className="text-xl font-bold text-gray-900">
+                Diagnosis Report
+              </span>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -85,17 +120,24 @@ export default function DiagnosisPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900">Patient {diagnosis.patientId}</h1>
+              <h1 className="text-3xl font-bold text-gray-900">
+                Patient {diagnosisData?.patient_id}
+              </h1>
               <p className="text-gray-600">
-                Scan Date: {diagnosis.scanDate} • Analysis: {diagnosis.analysisDate}
+                Scan Date: {diagnosisData?.scan_date} • Analysis:{" "}
+                {diagnosisData?.created_at}
               </p>
             </div>
             <Badge
               className={`text-lg px-4 py-2 ${
-                diagnosis.tumorDetected ? "bg-red-100 text-red-800" : "bg-green-100 text-green-800"
+                diagnosisData?.tumor_detected
+                  ? "bg-red-100 text-red-800"
+                  : "bg-green-100 text-green-800"
               }`}
             >
-              {diagnosis.tumorDetected ? "Tumor Detected" : "No Tumor Detected"}
+              {diagnosisData?.tumor_detected
+                ? "Tumor Detected"
+                : "No Tumor Detected"}
             </Badge>
           </div>
         </div>
@@ -112,15 +154,17 @@ export default function DiagnosisPage() {
                       <Brain className="h-5 w-5 text-blue-600" />
                       <span>AI Analysis Results</span>
                     </CardTitle>
-                    <CardDescription>Automated brain tumor detection and classification</CardDescription>
+                    <CardDescription>
+                      Automated brain tumor detection and classification
+                    </CardDescription>
                   </div>
                   <Badge variant="outline" className="bg-blue-50 text-blue-700">
-                    {diagnosis.confidence}% Confidence
+                    {diagnosisData?.confidence}% Confidence
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
-                {diagnosis.tumorDetected ? (
+                {diagnosisData?.tumor_detected ? (
                   <div className="space-y-4">
                     <div className="flex items-center space-x-2 text-red-700">
                       <AlertTriangle className="h-5 w-5" />
@@ -129,35 +173,60 @@ export default function DiagnosisPage() {
 
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Tumor Type</label>
-                        <p className="text-lg font-semibold">{diagnosis.tumorType}</p>
+                        <label className="text-sm font-medium text-gray-700">
+                          Tumor Type
+                        </label>
+                        <p className="text-lg font-semibold">
+                          {diagnosisData?.tumor_type}
+                        </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Location</label>
-                        <p className="text-lg font-semibold">{diagnosis.location}</p>
+                        <label className="text-sm font-medium text-gray-700">
+                          Location
+                        </label>
+                        <p className="text-lg font-semibold">
+                          {diagnosisData?.location}
+                        </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Size</label>
-                        <p className="text-lg font-semibold">{diagnosis.size}</p>
+                        <label className="text-sm font-medium text-gray-700">
+                          Size
+                        </label>
+                        <p className="text-lg font-semibold">
+                          {diagnosisData?.size}
+                        </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-gray-700">Volume</label>
-                        <p className="text-lg font-semibold">{diagnosis.volume}</p>
+                        <label className="text-sm font-medium text-gray-700">
+                          Volume
+                        </label>
+                        <p className="text-lg font-semibold">
+                          {diagnosisData?.volume}
+                        </p>
                       </div>
                     </div>
 
                     <div>
-                      <label className="text-sm font-medium text-gray-700 mb-2 block">Confidence Score</label>
+                      <label className="text-sm font-medium text-gray-700 mb-2 block">
+                        Confidence Score
+                      </label>
                       <div className="flex items-center space-x-3">
-                        <Progress value={diagnosis.confidence} className="flex-1" />
-                        <span className="text-sm font-medium">{diagnosis.confidence}%</span>
+                        <Progress
+                          value={diagnosisData.confidence}
+                          className="flex-1"
+                        />
+                        <span className="text-sm font-medium">
+                          {diagnosisData.confidence}%
+                        </span>
                       </div>
                     </div>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2 text-green-700">
                     <CheckCircle className="h-5 w-5" />
-                    <span className="font-semibold">No tumor detected in this scan</span>
+                    <span className="font-semibold">
+                      No tumor detected in this scan
+                    </span>
                   </div>
                 )}
               </CardContent>
@@ -170,43 +239,35 @@ export default function DiagnosisPage() {
                   <Eye className="h-5 w-5 text-purple-600" />
                   <span>MRI Visualization</span>
                 </CardTitle>
-                <CardDescription>Original scan with AI-highlighted regions</CardDescription>
+                <CardDescription>
+                  Original scan with AI-highlighted regions
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
                   <div className="text-center text-gray-500">
                     <Brain className="h-16 w-16 mx-auto mb-4 text-gray-400" />
-                    <p className="text-lg font-medium">MRI Scan Visualization</p>
-                    <p className="text-sm">Interactive viewer would be displayed here</p>
-                    {diagnosis.tumorDetected && (
-                      <Badge className="mt-2 bg-red-100 text-red-800">Tumor regions highlighted in red</Badge>
+                    <p className="text-lg font-medium">
+                      MRI Scan Visualization
+                    </p>
+                    <p className="text-sm">
+                      Interactive viewer would be displayed here
+                    </p>
+                    {diagnosisData?.tumor_detected && (
+                      <Badge className="mt-2 bg-red-100 text-red-800">
+                        Tumor regions highlighted in red
+                      </Badge>
                     )}
                   </div>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Clinical Notes */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <FileText className="h-5 w-5 text-green-600" />
-                  <span>Clinical Notes</span>
-                </CardTitle>
-                <CardDescription>Add your clinical observations and recommendations</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <Textarea
-                  placeholder="Enter your clinical notes, observations, and recommendations..."
-                  value={notes}
-                  onChange={(e) => setNotes(e.target.value)}
-                  rows={6}
-                />
-                <div className="flex justify-end mt-4">
-                  <Button>Save Notes</Button>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Clinical Notes - Client Component for Editing */}
+            <DiagnosisClient
+              diagnosisId={diagnosisData?.id ?? ""}
+              initialNotes={diagnosisData?.clinical_notes ?? ""}
+            />
           </div>
 
           {/* Sidebar */}
@@ -218,25 +279,33 @@ export default function DiagnosisPage() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Scan Type</label>
-                  <p className="text-sm">{diagnosis.scanType}</p>
+                  <label className="text-sm font-medium text-gray-700">
+                    Scan Type
+                  </label>
+                  <p className="text-sm">{diagnosisData?.scan_type}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Field Strength</label>
-                  <p className="text-sm">{diagnosis.fieldStrength}</p>
+                  <label className="text-sm font-medium text-gray-700">
+                    Field Strength
+                  </label>
+                  <p className="text-sm">{diagnosisData?.field_strength}</p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">Processing Time</label>
+                  <label className="text-sm font-medium text-gray-700">
+                    Processing Time
+                  </label>
                   <p className="text-sm flex items-center">
                     <Clock className="h-4 w-4 mr-1" />
-                    {diagnosis.processingTime}
+                    {diagnosisData?.processing_time || "N/A"}
                   </p>
                 </div>
                 <div>
-                  <label className="text-sm font-medium text-gray-700">AI Model</label>
+                  <label className="text-sm font-medium text-gray-700">
+                    AI Model
+                  </label>
                   <p className="text-sm flex items-center">
                     <Zap className="h-4 w-4 mr-1" />
-                    {diagnosis.aiModel}
+                    {/* {diagnosisData?.ai_model} */}
                   </p>
                 </div>
               </CardContent>
@@ -253,30 +322,30 @@ export default function DiagnosisPage() {
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Sensitivity</span>
-                      <span>{diagnosis.metrics.sensitivity}%</span>
+                      {/* <span>{diagnosisData?.metrics.sensitivity}%</span> */}
                     </div>
-                    <Progress value={diagnosis.metrics.sensitivity} />
+                    {/* <Progress value={diagnosisData?.metrics.sensitivity} /> */}
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Specificity</span>
-                      <span>{diagnosis.metrics.specificity}%</span>
+                      {/* <span>{diagnosisData?.metrics.specificity}%</span> */}
                     </div>
-                    <Progress value={diagnosis.metrics.specificity} />
+                    {/* <Progress value={diagnosisData?.metrics.specificity} /> */}
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>Precision</span>
-                      <span>{diagnosis.metrics.precision}%</span>
+                      {/* <span>{diagnosisData?.metrics.precision}%</span> */}
                     </div>
-                    <Progress value={diagnosis.metrics.precision} />
+                    {/* <Progress value={diagnosisData?.metrics.precision} /> */}
                   </div>
                   <div>
                     <div className="flex justify-between text-sm mb-1">
                       <span>F1-Score</span>
-                      <span>{diagnosis.metrics.f1Score}%</span>
+                      {/* <span>{diagnosisData?.metrics.f1Score}%</span> */}
                     </div>
-                    <Progress value={diagnosis.metrics.f1Score} />
+                    {/* <Progress value={diagnosisData?.metrics.f1Score} /> */}
                   </div>
                 </div>
               </CardContent>
@@ -310,5 +379,5 @@ export default function DiagnosisPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

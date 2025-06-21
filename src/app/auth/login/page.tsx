@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Brain, Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { createClient } from "@/utils/supabase/client";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -18,15 +18,29 @@ export default function LoginPage() {
   const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+  e.preventDefault();
+  setIsLoading(true);
 
-    // Simulate login process
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push("/dashboard")
-    }, 1500)
+  const form = e.target as HTMLFormElement;
+  const email = (form.email as HTMLInputElement).value;
+  const password = (form.password as HTMLInputElement).value;
+
+  const supabase = createClient();
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    alert("Login failed: " + error.message);
+    setIsLoading(false);
+    return;
   }
+
+  // Success: redirect to dashboard
+  router.push("/dashboard");
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-300 to-white flex items-center justify-center p-4">
@@ -73,19 +87,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="role">Role</Label>
-                <Select defaultValue="doctor" >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select your role" />
-                  </SelectTrigger>
-                  <SelectContent className="max-h-60 bg-neutral-100">
-                    <SelectItem value="doctor">Doctor</SelectItem>
-                    <SelectItem value="researcher">Researcher</SelectItem>
-                    <SelectItem value="admin">Administrator</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="flex items-center justify-between">
                 <Link href="/auth/forgot-password" className="text-sm text-blue-600 hover:underline">

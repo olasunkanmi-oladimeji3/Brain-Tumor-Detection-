@@ -1,34 +1,94 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Brain, Eye, EyeOff } from "lucide-react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Brain, Eye, EyeOff } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/utils/supabase/client";
 
 export default function SignUpPage() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
 
-    // Simulate signup process
-    setTimeout(() => {
-      setIsLoading(false)
-      router.push("/dashboard")
-    }, 2000)
-  }
+    const supabase = await createClient();
+
+    const form = e.target as HTMLFormElement;
+    const firstName = (form.firstName as HTMLInputElement).value;
+    const lastName = (form.lastName as HTMLInputElement).value;
+    const email = (form.email as HTMLInputElement).value;
+    const hospital = (form.hospital as HTMLInputElement).value;
+    const role = (form.querySelector("[data-role]") as HTMLInputElement)?.value;
+    const license = (form.license as HTMLInputElement).value;
+    const password = (form.password as HTMLInputElement).value;
+    const confirmPassword = (form.confirmPassword as HTMLInputElement).value;
+
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      setIsLoading(false);
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      alert("Signup failed: " + error.message);
+      setIsLoading(false);
+      return;
+    }
+
+    const user = data.user;
+
+    // Save additional user info to `medical_users` table
+    const { error: profileError } = await supabase
+      .from("medical_users")
+      .insert({
+        id: user?.id,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        hospital,
+        role,
+        license_number: license,
+      });
+
+    if (profileError) {
+      alert("Failed to save user profile: " + profileError.message);
+      setIsLoading(false);
+      return;
+    }
+
+    // Redirect to dashboard
+    router.push("/dashboard");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-200 to-white flex items-center justify-center p-4">
@@ -81,11 +141,11 @@ export default function SignUpPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="role">Professional Role</Label>
-                <Select>
+                <Select name="role">
                   <SelectTrigger>
                     <SelectValue placeholder="Select your role" />
                   </SelectTrigger>
-                  <SelectContent className="max-h-60 bg-neutral-100">
+                  <SelectContent className="max-h-60 bg-neutral-100" data-role>
                     <SelectItem value="radiologist">Radiologist</SelectItem>
                     <SelectItem value="neurologist">Neurologist</SelectItem>
                     <SelectItem value="neurosurgeon">Neurosurgeon</SelectItem>
@@ -174,7 +234,11 @@ export default function SignUpPage() {
                 </Label>
               </div>
 
-              <Button type="submit" className="w-full bg-blue-900 text-white" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="w-full bg-blue-900 text-white"
+                disabled={isLoading}
+              >
                 {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
             </form>
