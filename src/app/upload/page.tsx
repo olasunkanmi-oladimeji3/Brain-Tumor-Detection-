@@ -102,6 +102,7 @@ export default function UploadPage() {
 // make sure this is imported
 
 const handleUpload = async (e: React.FormEvent) => {
+  // saving images is left and pushing to git
   e.preventDefault();
   if (files.length === 0) return;
 
@@ -112,10 +113,13 @@ const handleUpload = async (e: React.FormEvent) => {
   formData.append("file", files[0]);
 
   try {
-    const analyzeRes = await fetch("https://ml-ai-for-detecting-brain-tumor.onrender.com", {
-      method: "POST",
-      body: formData,
-    });
+    const analyzeRes = await fetch(
+      "https://ml-ai-for-detecting-brain-tumor.onrender.com/analyze",
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
 
     if (!analyzeRes.ok) throw new Error("Failed to analyze");
 
