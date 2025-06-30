@@ -50,7 +50,7 @@ export default function UploadPage() {
       }
     };
     checkUser();
-  }, [supabase.auth, router]);
+  }, [ router]);
 
   const [files, setFiles] = useState<File[]>([]);
   const [dragActive, setDragActive] = useState(false);
