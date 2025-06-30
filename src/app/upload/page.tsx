@@ -38,8 +38,9 @@ import { useRouter } from "next/navigation";
 
 export default function UploadPage() {
   const router = useRouter();
-  const supabase = createClient();
+  
   useEffect(() => {
+    const supabase = createClient();
     const checkUser = async () => {
       const {
         data: { user },
